@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Counter.Views.CounterPage"
+             xmlns:viewModels="clr-namespace:Counter.ViewModels"
+             x:DataType="viewModels:CounterViewModel"
+             Title="Counter">
+
+    <VerticalStackLayout Padding="10" Spacing="10">
+        <Label Text="{Binding Counter}" FontSize="Large" HorizontalOptions="Center"/>
+        <Label Text="{Binding CounterName}" FontSize="Medium" HorizontalOptions="Center"/>
+        
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Button Text="+" Command="{Binding IncrementCounterCommand}"
+                    BackgroundColor="#FFD100" TextColor="black"/>
+            <Button Text="Reset" Command="{Binding ResetCounterCommand}"
+                    BackgroundColor="#D6D6D6"/>
+            <Button Text="-" Command="{Binding DecrementCounterCommand}"
+                    BackgroundColor="#FFD100" TextColor="Black"/>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout HorizontalOptions="Center">
+            <Button Text="Delete Counter" Command="{Binding DeleteCounterCommand}" 
+                    BackgroundColor="Red" TextColor="White" HorizontalOptions="Center"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

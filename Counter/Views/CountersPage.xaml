@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Counter.ViewModels"
+             x:Class="Counter.Views.CountersPage"
+             x:DataType="viewModels:CountersViewModel"
+             Title="Counters">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+            Text="Dodaj Counter"
+            IconImageSource="{FontImageSource Glyph='+', Color='Black', Size='22'}"
+            Command="{Binding AddNewCounterCommand}"
+            />
+    </ContentPage.ToolbarItems>
+
+    <VerticalStackLayout MaximumWidthRequest="500">
+        <Grid ColumnDefinitions="*, *, 100" ColumnSpacing="10">
+
+            <VerticalStackLayout Grid.Column="0" Spacing="5" VerticalOptions="Center">
+                <Label Text="Nazwa licznika"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
+                <Label Text="Liczba zliczeń" HorizontalTextAlignment="End"/>
+            </VerticalStackLayout>
+        </Grid>
+        <CollectionView
+            x:Name="CountersCollection"
+            ItemsSource="{Binding Counters}"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedCounter}"
+            SelectionChangedCommand="{Binding CounterSelectionCommand}">
+            
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:CounterViewModel">
+                    <Border Stroke="#FFD100" Background="#333533"
+                            Padding="10" StrokeShape="RoundRectangle 10">
+
+                        <Grid ColumnDefinitions="*, *, 100" ColumnSpacing="10">
+
+                            <VerticalStackLayout Grid.Column="0" Spacing="5" VerticalOptions="Center">
+                                <Label Text="{Binding CounterName}" FontSize="Small"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
+                                <Label Text="{Binding Counter}" FontSize="Small" HorizontalTextAlignment="End" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
+                                <Button Text="Usuń" Command="{Binding DeleteCounterCommand}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
