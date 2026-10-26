@@ -12,51 +12,31 @@ namespace Counter.ViewModels
         public int CounterID { get; private set; }
         public CounterModel Model { get; private set; }
         public string CounterName => Model.CounterName;
-
         private int _counter;
         public int Counter
         {
             get => _counter;
             set
             {
+                if (_counter == value) return;
                 _counter = value;
                 OnPropertyChanged(nameof(Counter));
             }
         }
+        public string DeleteText => "Delete";
 
         public ICommand IncrementCounterCommand { get; }
         public ICommand DecrementCounterCommand { get; }
         public ICommand ResetCounterCommand { get; }
         public ICommand DeleteCounterCommand { get; }
 
-        //może udałoby się jakąś delegacje albo nie, nie wiem
-        public CounterViewModel()
-        {
-            this.Model = new CounterModel();
-            CounterID = this.Model.ID;
-            Counter = Model.CounterNumber;
-            IncrementCounterCommand = new Command(IncrementCounter);
-            DecrementCounterCommand = new Command(DecrementCounter);
-            ResetCounterCommand = new Command(ResetCounter);
-            DeleteCounterCommand = new Command(async () => await DeleteCounter());
-        }
-
-        public CounterViewModel(int counterID)
-        {
-            this.Model = CounterModel.LoadCounter(counterID);
-            Counter = Model.CounterNumber;
-            CounterID = this.Model.ID;
-            IncrementCounterCommand = new Command(IncrementCounter);
-            DecrementCounterCommand = new Command(DecrementCounter);
-            ResetCounterCommand = new Command(ResetCounter);
-            DeleteCounterCommand = new Command(async () => await DeleteCounter());
-        }
-
+        public CounterViewModel() : this(new CounterModel()) {}
+        public CounterViewModel(int counterID) : this(CounterModel.LoadCounter(counterID) ?? throw new Exception("This counter can't be found")) {}
         public CounterViewModel(CounterModel counterModel)
         {
             this.Model = counterModel;
-            Counter = Model.CounterNumber;
             CounterID = this.Model.ID;
+            Counter = Model.CounterNumber;
             IncrementCounterCommand = new Command(IncrementCounter);
             DecrementCounterCommand = new Command(DecrementCounter);
             ResetCounterCommand = new Command(ResetCounter);
@@ -77,18 +57,7 @@ namespace Counter.ViewModels
             this.Model.Reset();
             RefreshCounter();
         }
-        private void RefreshCounter()
-        {
-            this.Counter = this.Model.CounterNumber;
-        }
-        public event Action<CounterViewModel>? Deleted;
-        private async Task DeleteCounter()
-        {
-            this.Model.Delete();
-            Deleted?.Invoke(this);
-            await Shell.Current.GoToAsync($"///{nameof(Views.CountersPage)}");
-            return;
-        }
+        private void RefreshCounter() => this.Counter = this.Model.CounterNumber;
 
         public static IEnumerable<CounterViewModel> LoadCounterViewModels()
         {
@@ -97,6 +66,15 @@ namespace Counter.ViewModels
                 .ToList<CounterViewModel>();
 
             return counters;
+        }
+        // find out if Action is the best way to handle event
+        public event Action<CounterViewModel>? Deleted;
+        private async Task DeleteCounter()
+        {
+            this.Model.Delete();
+            Deleted?.Invoke(this);
+            await Shell.Current.GoToAsync($"///{nameof(Views.CountersPage)}");
+            return;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

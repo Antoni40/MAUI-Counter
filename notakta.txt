@@ -1,1 +1,0 @@
-Problem: Po usunięciu licznika z XML przez CounterViewModel kolekcja Counters w CountersViewModel nie aktualizuje się automatycznie. Trzeba zsynchronizować kolekcję z plikiem, np. przez CounterService lub zdarzenie (event).

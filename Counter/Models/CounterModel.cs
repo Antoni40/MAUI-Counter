@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Counter.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Counter.Models
 {
-    // ten model na każdą zmiane musi aktualizować plik .xml (bo miał być automatyczny zapis)
+    // solve problems with null warnings
     internal class CounterModel
     {
         public int ID { get; private set; }
@@ -52,10 +53,10 @@ namespace Counter.Models
             else
             {
                 XDocument document = XDocument.Load(filePath);
+                XElement? lastCounter = document.Root?.Elements("Counters").LastOrDefault();
+
                 document.Root?.Add(new XElement("Counter",
-                    new XAttribute("CounterID",
-                        document.Root.Elements().LastOrDefault().Attribute("CounterID") == null ? 0 :
-                        int.Parse(document.Root.Elements().LastOrDefault().Attribute("CounterID").Value) + 1),
+                    new XAttribute("CounterID", lastCounter == null ? 0 : int.Parse(lastCounter.Value) + 1),
                     new XElement("CounterNumber", this.CounterNumber),
                     new XElement("CounterName", this.CounterName),
                     new XElement("InitialValue", this.InitialValue)
@@ -68,12 +69,19 @@ namespace Counter.Models
         {
             string filePath = Path.Combine(FileSystem.AppDataDirectory, "counter.xml");
             XDocument document = XDocument.Load(filePath);
-            XElement counter = document.Root?.Elements().FirstOrDefault(counter => int.Parse(counter.Attribute("CounterID").Value) == ID);
+            XElement? counter = document.Root?.Elements().FirstOrDefault(c => int.TryParse(c?.Attribute("CounterID")?.Value, out int counterID) ? counterID == ID : false);
 
-            this.ID = ID;
-            this.CounterName = counter.Element("CounterName").Value;
-            this.CounterNumber = int.Parse(counter.Element("CounterNumber").Value);
-            this.InitialValue = int.Parse(counter.Element("InitialValue").Value);
+            //if there is null we have a really big problem cause we shouldn't create a model I'll throw an error that is not handled
+            if (counter != null)
+            {
+                this.ID = ID;
+                this.CounterName = counter?.Element("CounterName")?.Value ?? "Default Name";
+                this.CounterNumber = (int.TryParse(counter?.Element("CounterNumber")?.Value, out int counterNumber)) ? counterNumber : 0;
+                this.InitialValue = (int.TryParse(counter?.Element("InitialValue")?.Value, out int initialValue)) ? counterNumber : 0;
+            } else
+            {
+                throw new Exception($"Counter with ID: {ID} cannot be found in .xml file");
+            }
         }
 
         public void Increment()
@@ -97,8 +105,9 @@ namespace Counter.Models
             string filePath = Path.Combine(FileSystem.AppDataDirectory, "counter.xml");
             XDocument document = XDocument.Load(filePath);
 
+            //there is no problem when deleting cause it won't be deleted
             document.Root?.Elements()
-                .Where(counter => int.Parse(counter.Attribute("CounterID").Value) == this.ID)
+                .Where(counter => int.TryParse(counter?.Attribute("CounterID")?.Value, out int counterID) ? counterID == this.ID : false)
                 .Remove();
 
             document.Save(filePath);
@@ -113,7 +122,7 @@ namespace Counter.Models
             XDocument document = XDocument.Load(filePath);
 
             XElement? elm = document.Root?.Elements()
-                .Where(counter => int.Parse(counter.Attribute("CounterID").Value) == this.ID)
+                .Where(counter => int.TryParse(counter?.Attribute("CounterID")?.Value, out int counterID) ? counterID == this.ID : false)
                 .FirstOrDefault();
 
             elm?.Element("CounterNumber")?.SetValue(number);
@@ -132,8 +141,10 @@ namespace Counter.Models
                 return null;
 
             CounterModel? counter = document.Root.Elements("Counter")
-                .Where((counter) => counter.HasAttributes && (int.Parse(counter.Attribute("CounterID").Value) == ID))
-                .Select(counter => new CounterModel(int.Parse(counter.Attribute("CounterID").Value)))
+                .Where((counter) => counter.HasAttributes && int.TryParse(counter?.Attribute("CounterID")?.Value, out int counterID) ? counterID == ID : false)
+                .Select(counter => new CounterModel(int.TryParse(counter?.Attribute("CounterID")?.Value, out int counterID) 
+                    ? (counterID == ID ? counterID : throw new Exception($"Counter with ID: {ID} cannot be found in .xml file")) : 
+                    throw new Exception("Counter ID strored in xml file is not a number")))
                 .FirstOrDefault();
 
             return counter;
@@ -143,8 +154,6 @@ namespace Counter.Models
         {
             string filePath = Path.Combine(FileSystem.AppDataDirectory, "counter.xml");
 
-            // tutaj trzeba stworzyć ten plik jak go nie ma
-            // to bardzo ważne
             if (!File.Exists(filePath))
             {
                 createEmptyXmlFile();
@@ -152,19 +161,13 @@ namespace Counter.Models
             }
             
             XDocument countersXmlDocument = XDocument.Load(filePath);
-
-            //if (countersXmlDocument.Root == null || !countersXmlDocument.Root.HasElements)
-            //    return Enumerable.Empty<CounterModel>();
             
-            
-            List<CounterModel> counters = countersXmlDocument.Root.Elements("Counter")
-                .Select(counter => new CounterModel(int.Parse(counter.Attribute("CounterID").Value)))
+            List<CounterModel>? counters = countersXmlDocument.Root?.Elements("Counter")
+                .Select(counter => new CounterModel(int.TryParse(counter?.Attribute("CounterID")?.Value, out int counterID) ? 
+                    counterID : throw new Exception("Counter ID strored in xml file is not a number")))
                 .ToList<CounterModel>();
 
-            if (counters.Count == 0)
-            {
-                counters.Add(new CounterModel());
-            }
+            counters = counters ?? new List<CounterModel>();
 
             return counters;   
         }

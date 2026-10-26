@@ -4,11 +4,11 @@
              xmlns:viewModels="clr-namespace:Counter.ViewModels"
              x:Class="Counter.Views.CountersPage"
              x:DataType="viewModels:CountersViewModel"
-             Title="Counters">
+             Title="All Counters">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem 
-            Text="Dodaj Counter"
+            Text="{Binding AddCounterText}"
             IconImageSource="{FontImageSource Glyph='+', Color='Black', Size='22'}"
             Command="{Binding AddNewCounterCommand}"
             />
@@ -17,14 +17,19 @@
     <VerticalStackLayout MaximumWidthRequest="500">
         <Grid ColumnDefinitions="*, *, 100" ColumnSpacing="10">
 
-            <VerticalStackLayout Grid.Column="0" Spacing="5" VerticalOptions="Center">
-                <Label Text="Nazwa licznika"/>
+            <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                <Label Text="{Binding CounterNameLabel}"/>
             </VerticalStackLayout>
 
-            <VerticalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
-                <Label Text="Liczba zliczeń" HorizontalTextAlignment="End"/>
+            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="End">
+                <Label Text="{Binding CountLabel}" HorizontalTextAlignment="End"/>
+            </VerticalStackLayout>
+            
+            <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="End">
+                <Label Text="{Binding DangerZoneText}" HorizontalTextAlignment="End"/>
             </VerticalStackLayout>
         </Grid>
+        
         <CollectionView
             x:Name="CountersCollection"
             ItemsSource="{Binding Counters}"
@@ -38,7 +43,7 @@
             
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:CounterViewModel">
-                    <Border Stroke="#FFD100" Background="#333533"
+                    <Border Stroke="{StaticResource TextSecondary}" Background="{StaticResource Surface}"
                             Padding="10" StrokeShape="RoundRectangle 10">
 
                         <Grid ColumnDefinitions="*, *, 100" ColumnSpacing="10">
@@ -52,7 +57,9 @@
                             </VerticalStackLayout>
                             
                             <VerticalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
-                                <Button Text="Usuń" Command="{Binding DeleteCounterCommand}"/>
+                                <Button Text="{Binding DeleteText}" Command="{Binding DeleteCounterCommand}"
+                                        BackgroundColor="{StaticResource Danger}"
+                                        TextColor="White"/>
                             </VerticalStackLayout>
                         </Grid>
                     </Border>

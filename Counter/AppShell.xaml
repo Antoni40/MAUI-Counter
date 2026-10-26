@@ -7,7 +7,7 @@
     Title="Counter">
 
     <ShellContent
-        Title="Counters"
+        Title="All Counters"
         ContentTemplate="{DataTemplate views:CountersPage}"
         Route="CountersPage" />
 </Shell>

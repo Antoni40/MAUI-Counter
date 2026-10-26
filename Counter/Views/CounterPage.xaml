@@ -12,16 +12,16 @@
         
         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
             <Button Text="+" Command="{Binding IncrementCounterCommand}"
-                    BackgroundColor="#FFD100" TextColor="black"/>
+                    TextColor="black"/>
             <Button Text="Reset" Command="{Binding ResetCounterCommand}"
-                    BackgroundColor="#D6D6D6"/>
+                    BackgroundColor="{StaticResource TextSecondary}"/>
             <Button Text="-" Command="{Binding DecrementCounterCommand}"
-                    BackgroundColor="#FFD100" TextColor="Black"/>
+                    TextColor="Black"/>
         </HorizontalStackLayout>
 
         <HorizontalStackLayout HorizontalOptions="Center">
-            <Button Text="Delete Counter" Command="{Binding DeleteCounterCommand}" 
-                    BackgroundColor="Red" TextColor="White" HorizontalOptions="Center"/>
+            <Button Text="{Binding DeleteText}" Command="{Binding DeleteCounterCommand}" 
+                    BackgroundColor="{StaticResource Danger}" TextColor="White" HorizontalOptions="Center"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

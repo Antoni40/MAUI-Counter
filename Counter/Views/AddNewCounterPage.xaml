@@ -4,34 +4,33 @@
              x:Class="Counter.Views.AddNewCounterPage"
              xmlns:viewModel="clr-namespace:Counter.ViewModels"
              x:DataType="viewModel:AddNewCounterViewModel"
-             Title="AddNewCounterPage">
+             Title="Add New Counter">
+    
     <VerticalStackLayout Padding="20" Spacing="15" MaximumWidthRequest="400">
-        <Label Text="Dodaj nowy licznik"
+        <Label Text="{Binding AddNewCounterText}"
                FontSize="24"
                FontAttributes="Bold" />
         
-        <Label Text="Nazwa licznika"
+        <Label Text="{Binding CounterNameText}"
                FontSize="16"
                FontAttributes="Bold" />
 
-        <Entry Placeholder="(np. licznik)"
+        <Entry Placeholder="{Binding NameEntryPlaceholder}"
                x:Name="CounterNameEntry"
                MaxLength="50" 
                Text="{Binding CounterName}"/>
         
-        <Label Text="Wartość początkowa"
+        <Label Text="{Binding InitialValueText}"
                FontSize="16"
                FontAttributes="Bold" />
-        
-        <Entry Placeholder="(np. 0)"
+
+        <Entry Placeholder="{Binding InitialValueEntryPlaceholder}"
                x:Name="InitialValueEntry"
                Keyboard="Numeric"
                Text="{Binding CounterInitialValue}"/>
 
-        <Button Text="Dodaj licznik"
-                BackgroundColor="#FFD100"
-                TextColor="Black"
-                CornerRadius="10"
+        <Button Text="{Binding AddNewCounterButtonText}"
+                BackgroundColor="{StaticResource Primary}"
                 Command="{Binding AddNewCounterCommand}"/>
     </VerticalStackLayout>
 </ContentPage>
