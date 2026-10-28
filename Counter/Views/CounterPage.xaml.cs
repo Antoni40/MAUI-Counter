@@ -3,12 +3,12 @@ namespace Counter.Views;
 
 public partial class CounterPage : ContentPage
 {
-	public int CounterID { set { LoadCounter(value); } }
+	public int CounterID { set =>  LoadCounter(value); }
 	public CounterPage()
 	{
 		InitializeComponent();
 	}
-	public void LoadCounter(int id)
+	private void LoadCounter(int id)
 	{
         BindingContext = new ViewModels.CounterViewModel(id);
     }

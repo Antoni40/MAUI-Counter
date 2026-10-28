@@ -1,7 +1,5 @@
 ﻿using Counter.Models;
-using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -9,21 +7,25 @@ namespace Counter.ViewModels
 {
     internal class CounterViewModel : INotifyPropertyChanged
     {
-        public int CounterID { get; private set; }
         public CounterModel Model { get; private set; }
+        public int CounterID => Model.ID;
         public string CounterName => Model.CounterName;
-        private int _counter;
         public int Counter
         {
-            get => _counter;
+            get => this.Model.CounterNumber;
             set
             {
-                if (_counter == value) return;
-                _counter = value;
+                if (this.Model.CounterNumber == value) return;
+                this.Model.CounterNumber = value;
                 OnPropertyChanged(nameof(Counter));
             }
         }
+
+        public Color CounterColor => Color.FromArgb(this.Model.ColorHex);
         public string DeleteText => "Delete";
+
+
+        public string SelectedColor { get; set; } = String.Empty;
 
         public ICommand IncrementCounterCommand { get; }
         public ICommand DecrementCounterCommand { get; }
@@ -35,8 +37,7 @@ namespace Counter.ViewModels
         public CounterViewModel(CounterModel counterModel)
         {
             this.Model = counterModel;
-            CounterID = this.Model.ID;
-            Counter = Model.CounterNumber;
+            this.Counter = Model.CounterNumber;
             IncrementCounterCommand = new Command(IncrementCounter);
             DecrementCounterCommand = new Command(DecrementCounter);
             ResetCounterCommand = new Command(ResetCounter);
@@ -45,19 +46,18 @@ namespace Counter.ViewModels
         private void IncrementCounter()
         {
             this.Model.Increment();
-            RefreshCounter();
+            OnPropertyChanged(nameof(Counter));
         }
         private void DecrementCounter()
         {
             this.Model.Decrement();
-            RefreshCounter();
+            OnPropertyChanged(nameof(Counter));
         }
         private void ResetCounter()
         {
             this.Model.Reset();
-            RefreshCounter();
+            OnPropertyChanged(nameof(Counter));
         }
-        private void RefreshCounter() => this.Counter = this.Model.CounterNumber;
 
         public static IEnumerable<CounterViewModel> LoadCounterViewModels()
         {
@@ -67,12 +67,11 @@ namespace Counter.ViewModels
 
             return counters;
         }
-        // find out if Action is the best way to handle event
-        public event Action<CounterViewModel>? Deleted;
+        public event EventHandler? Deleted;
         private async Task DeleteCounter()
         {
             this.Model.Delete();
-            Deleted?.Invoke(this);
+            Deleted?.Invoke(this, EventArgs.Empty);
             await Shell.Current.GoToAsync($"///{nameof(Views.CountersPage)}");
             return;
         }

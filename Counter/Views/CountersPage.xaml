@@ -14,57 +14,69 @@
             />
     </ContentPage.ToolbarItems>
 
-    <VerticalStackLayout MaximumWidthRequest="500">
-        <Grid ColumnDefinitions="*, *, 100" ColumnSpacing="10">
+        <VerticalStackLayout MaximumWidthRequest="600" Margin="0,20,0,0">
+            <Grid RowDefinitions="Auto,*" >
+                <Grid Grid.Row="0" ColumnDefinitions="*,*,100" ColumnSpacing="10">
 
-            <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
-                <Label Text="{Binding CounterNameLabel}"/>
-            </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                        <Label Text="{Binding CounterNameLabel}"/>
+                    </VerticalStackLayout>
 
-            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="End">
-                <Label Text="{Binding CountLabel}" HorizontalTextAlignment="End"/>
-            </VerticalStackLayout>
-            
-            <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="End">
-                <Label Text="{Binding DangerZoneText}" HorizontalTextAlignment="End"/>
-            </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="End">
+                        <Label Text="{Binding CountLabel}" HorizontalTextAlignment="End"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="End">
+                        <Label Text="{Binding DangerZoneText}" HorizontalTextAlignment="End"/>
+                </VerticalStackLayout>
+                </Grid>
+
+                <CollectionView
+                    Grid.Row="1"
+                    x:Name="CountersCollection"
+                    ItemsSource="{Binding Counters}"
+                    SelectionMode="Single"
+                    SelectedItem="{Binding SelectedCounter}"
+                    SelectionChangedCommand="{Binding CounterSelectionCommand}">
+
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Margin="0,20,0,0">
+                            <Label Text="{Binding NoCountersText}"
+                                Margin="0,20,0,0"
+                                HorizontalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                TextColor="{StaticResource Danger}"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+
+                <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:CounterViewModel">
+                            <Border Stroke="{Binding CounterColor}" Background="{StaticResource Surface}"
+                                Padding="20" StrokeShape="RoundRectangle 10">
+                                <Grid ColumnDefinitions="*, *, 100" ColumnSpacing="10">
+
+                                    <VerticalStackLayout Grid.Column="0" Spacing="5" VerticalOptions="Center">
+                                        <Label Text="{Binding CounterName}" FontSize="24"/>
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
+                                        <Label Text="{Binding Counter}" TextColor="{Binding CounterColor}"  FontSize="24" HorizontalTextAlignment="End" />
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
+                                        <Button Text="{Binding DeleteText}" Command="{Binding DeleteCounterCommand}"
+                                            BackgroundColor="{StaticResource Danger}"
+                                            TextColor="White"/>
+                                    </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Grid>
-        
-        <CollectionView
-            x:Name="CountersCollection"
-            ItemsSource="{Binding Counters}"
-            SelectionMode="Single"
-            SelectedItem="{Binding SelectedCounter}"
-            SelectionChangedCommand="{Binding CounterSelectionCommand}">
-            
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
-            </CollectionView.ItemsLayout>
-            
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:CounterViewModel">
-                    <Border Stroke="{StaticResource TextSecondary}" Background="{StaticResource Surface}"
-                            Padding="10" StrokeShape="RoundRectangle 10">
-
-                        <Grid ColumnDefinitions="*, *, 100" ColumnSpacing="10">
-
-                            <VerticalStackLayout Grid.Column="0" Spacing="5" VerticalOptions="Center">
-                                <Label Text="{Binding CounterName}" FontSize="Small"/>
-                            </VerticalStackLayout>
-
-                            <VerticalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
-                                <Label Text="{Binding Counter}" FontSize="Small" HorizontalTextAlignment="End" />
-                            </VerticalStackLayout>
-                            
-                            <VerticalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center" HorizontalOptions="End">
-                                <Button Text="{Binding DeleteText}" Command="{Binding DeleteCounterCommand}"
-                                        BackgroundColor="{StaticResource Danger}"
-                                        TextColor="White"/>
-                            </VerticalStackLayout>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>

@@ -9,12 +9,24 @@
     
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="16"/>
     </Style>
 
     <Style TargetType="Button">
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
         <Setter Property="TextColor" Value="{StaticResource Background}" />
+        <Setter Property="FontSize" Value="16"/>
     </Style>
+
+    <Style TargetType="Entry">
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+    
+    <Style TargetType="Picker">
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+
 
     <!--
     <Style TargetType="ActivityIndicator">

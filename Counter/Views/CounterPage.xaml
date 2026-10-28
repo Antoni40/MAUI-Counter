@@ -6,22 +6,24 @@
              x:DataType="viewModels:CounterViewModel"
              Title="Counter">
 
-    <VerticalStackLayout Padding="10" Spacing="10">
-        <Label Text="{Binding Counter}" FontSize="Large" HorizontalOptions="Center"/>
-        <Label Text="{Binding CounterName}" FontSize="Medium" HorizontalOptions="Center"/>
-        
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-            <Button Text="+" Command="{Binding IncrementCounterCommand}"
-                    TextColor="black"/>
-            <Button Text="Reset" Command="{Binding ResetCounterCommand}"
-                    BackgroundColor="{StaticResource TextSecondary}"/>
-            <Button Text="-" Command="{Binding DecrementCounterCommand}"
-                    TextColor="Black"/>
-        </HorizontalStackLayout>
+    <VerticalStackLayout Spacing="10" Margin="0,20,0,0" MaximumWidthRequest="600">
+        <Label Text="{Binding Counter}" TextColor="{Binding CounterColor}" FontSize="48" HorizontalOptions="Center"/>
+        <Label Text="{Binding CounterName}" FontSize="32" HorizontalOptions="Center"/>
 
-        <HorizontalStackLayout HorizontalOptions="Center">
-            <Button Text="{Binding DeleteText}" Command="{Binding DeleteCounterCommand}" 
-                    BackgroundColor="{StaticResource Danger}" TextColor="White" HorizontalOptions="Center"/>
-        </HorizontalStackLayout>
+        <Grid RowDefinitions="Auto,Auto" HorizontalOptions="Center" RowSpacing="10">
+            <HorizontalStackLayout Grid.Row="0" Spacing="10" HorizontalOptions="Center">
+                <Button Text="+" BackgroundColor="{Binding CounterColor}"
+                    Command="{Binding IncrementCounterCommand}"
+                    TextColor="Black"/>
+                <Button Text="Reset" Command="{Binding ResetCounterCommand}"
+                    BackgroundColor="{StaticResource TextSecondary}"/>
+                <Button Text="-" BackgroundColor="{Binding CounterColor}"
+                    Command="{Binding DecrementCounterCommand}"
+                    TextColor="Black"/>
+            </HorizontalStackLayout>
+
+            <Button Grid.Row="1" Text="{Binding DeleteText}" Command="{Binding DeleteCounterCommand}" 
+                BackgroundColor="{StaticResource Danger}" TextColor="White"/>
+        </Grid>
     </VerticalStackLayout>
 </ContentPage>

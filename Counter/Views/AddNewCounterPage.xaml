@@ -5,32 +5,32 @@
              xmlns:viewModel="clr-namespace:Counter.ViewModels"
              x:DataType="viewModel:AddNewCounterViewModel"
              Title="Add New Counter">
-    
-    <VerticalStackLayout Padding="20" Spacing="15" MaximumWidthRequest="400">
+
+    <VerticalStackLayout Padding="20" Spacing="15" HorizontalOptions="Center" MaximumWidthRequest="600">
         <Label Text="{Binding AddNewCounterText}"
-               FontSize="24"
+               FontSize="36"
                FontAttributes="Bold" />
         
-        <Label Text="{Binding CounterNameText}"
-               FontSize="16"
-               FontAttributes="Bold" />
+        <Label Text="{Binding CounterNameText}"/>
 
         <Entry Placeholder="{Binding NameEntryPlaceholder}"
                x:Name="CounterNameEntry"
-               MaxLength="50" 
+               MaxLength="50"
                Text="{Binding CounterName}"/>
         
-        <Label Text="{Binding InitialValueText}"
-               FontSize="16"
-               FontAttributes="Bold" />
+        <Label Text="{Binding InitialValueText}"/>
 
         <Entry Placeholder="{Binding InitialValueEntryPlaceholder}"
                x:Name="InitialValueEntry"
                Keyboard="Numeric"
                Text="{Binding CounterInitialValue}"/>
 
+        <Picker Title="{Binding CounterColorText}"
+            ItemsSource="{Binding ColorsList}"
+            ItemDisplayBinding="{Binding ColorName}"
+            SelectedItem="{Binding SelectedColor}"/>
+
         <Button Text="{Binding AddNewCounterButtonText}"
-                BackgroundColor="{StaticResource Primary}"
                 Command="{Binding AddNewCounterCommand}"/>
     </VerticalStackLayout>
 </ContentPage>
